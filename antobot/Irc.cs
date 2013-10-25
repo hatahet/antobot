@@ -92,6 +92,12 @@ namespace antobot
 			}
 		}
 
+		public void PostAction(string act, params object[] format)
+		{
+			string str = string.Format(act, format);
+			PostMessageDirect("\x0001ACTION {0}\x0001", str);
+		}
+
 		public virtual void PostMessage(string msg, params object[] format)
 		{
 			msg = "PRIVMSG #GamedevTeam :" + string.Format(msg, format);

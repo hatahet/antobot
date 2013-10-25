@@ -82,7 +82,7 @@ namespace antobot
 			}
 			else if (msg.ToLowerInvariant().StartsWith("dance"))
 			{
-				PostMessage("\x0001ACTION dances \\o/\x0001");
+				PostAction("dances \\o/");
 			}
 			else if (msg.ToLowerInvariant().StartsWith("swearstats"))
 			{
@@ -247,10 +247,10 @@ namespace antobot
 			switch (action)
 			{
 				case "hugs antobot":
-					PostMessage("\x0001ACTION hugs {0}\x0001", user);
+					PostAction("hugs {0}", user);
 					break;
 				case "kisses antobot":
-					PostMessage("\x0001ACTION kisses {0}\x0001", user);
+					PostAction("kisses {0}", user);
 					break;
 			}
 		}
