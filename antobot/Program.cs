@@ -45,11 +45,11 @@ namespace antobot
 				ulong res = ((ulong)rand.Next() << 32) | (ulong)(rand.Next());
 				res %= bint;
 				++res;
-				postMessage("You rolled {0}", res);
+				PostMessage("You rolled {0}", res);
 			}
 			else
 			{
-				postMessage("Invalid number: {0}", val);
+				PostMessage("Invalid number: {0}", val);
 			}
 		}
 
@@ -62,18 +62,18 @@ namespace antobot
 			else if (msg.ToLowerInvariant().StartsWith("time"))
 			{
 				int time = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0)).TotalSeconds;
-				postMessage("It's currently: {0}", time);
+				PostMessage("It's currently: {0}", time);
 			}
 			else if (msg.ToLowerInvariant().StartsWith("objection"))
 			{
 				bool b = rand.Next(0, 2) == 1;
 				if (b)
 				{
-					postMessage("{0}: objection sustained!", user);
+					PostMessage("{0}: objection sustained!", user);
 				}
 				else
 				{
-					postMessage("{0}: objection overruled!", user);
+					PostMessage("{0}: objection overruled!", user);
 				}
 			}
 			else if (msg.ToLowerInvariant().StartsWith("cookie"))
@@ -82,7 +82,7 @@ namespace antobot
 			}
 			else if (msg.ToLowerInvariant().StartsWith("dance"))
 			{
-				postMessage("\x0001ACTION dances \\o/\x0001");
+				PostMessage("\x0001ACTION dances \\o/\x0001");
 			}
 			else if (msg.ToLowerInvariant().StartsWith("swearstats"))
 			{
@@ -93,17 +93,17 @@ namespace antobot
 						SwearingStats stats = swearStats[user];
 						if (stats.swearWords == 0)
 						{
-							postMessage("{0}: you've been an angel so far.", user);
+							PostMessage("{0}: you've been an angel so far.", user);
 						}
 						else
 						{
 							double prop = stats.totalWords / (double)stats.swearWords;
-							postMessage("{0}: 1 in every {1} words you used was a swear word.", user, prop.ToString(CultureInfo.InvariantCulture));
+							PostMessage("{0}: 1 in every {1} words you used was a swear word.", user, prop.ToString(CultureInfo.InvariantCulture));
 						}
 					}
 					else
 					{
-						postMessage("{0}: you haven't said anything yet!", user);
+						PostMessage("{0}: you haven't said anything yet!", user);
 					}
 				}
 			}
@@ -112,7 +112,7 @@ namespace antobot
 				if (!away.Contains(user))
 				{
 					away.Add(user);
-					postMessage("{0} is away.", user);
+					PostMessage("{0} is away.", user);
 				}
 			}
 			else if (msg.ToLowerInvariant().StartsWith("back"))
@@ -120,7 +120,7 @@ namespace antobot
 				if (away.Contains(user))
 				{
 					away.Remove(user);
-					postMessage("{0} is back.", user);
+					PostMessage("{0} is back.", user);
 				}
 			}
 		}
@@ -130,13 +130,13 @@ namespace antobot
 			int r = rand.Next(4);
 			switch (r)
 			{
-				case 0: postMessage("{0}: thanks!", user);
+				case 0: PostMessage("{0}: thanks!", user);
 					break;
-				case 1: postMessage("{0}: yum!", user);
+				case 1: PostMessage("{0}: yum!", user);
 					break;
-				case 2: postMessage("{0}: om nom nom!", user);
+				case 2: PostMessage("{0}: om nom nom!", user);
 					break;
-				case 3: postMessage("{0}: thank you very much!", user);
+				case 3: PostMessage("{0}: thank you very much!", user);
 					break;
 			}
 		}
@@ -158,7 +158,7 @@ namespace antobot
 				msgTrim == "antobot: hi!" || msgTrim == "antobot: hello!" ||
 				msgTrim == "antobot: hi." || msgTrim == "antobot: hello.")
 			{
-				postMessage("Hi {0}!", user);
+				PostMessage("Hi {0}!", user);
 			}
 			else if (msg.StartsWith("\x0001ACTION "))
 			{
@@ -211,20 +211,20 @@ namespace antobot
 
 			if (msg.Trim() == "o/")
 			{
-				postMessage("\\o");
+				PostMessage("\\o");
 			}
 
 			if (away.Contains(user))
 			{
 				away.Remove(user);
-				postMessage("{0} is back.", user);
+				PostMessage("{0} is back.", user);
 			}
 
 			foreach (string uname in away)
 			{
 				if (msg.StartsWith(uname + ":") || msg.StartsWith(uname + ","))
 				{
-					postMessage("{0}: {1} is away at the moment!", user, uname);
+					PostMessage("{0}: {1} is away at the moment!", user, uname);
 					break;
 				}
 			}
@@ -238,7 +238,7 @@ namespace antobot
 			string[] msgs = lastMsg.ToArray();
 			if (msgs.Length >= 2 && msgs.First() == msgs.Last())
 			{
-				postMessage(msgs.First() + "!");
+				PostMessage(msgs.First() + "!");
 			}
 		}
 
@@ -247,17 +247,17 @@ namespace antobot
 			switch (action)
 			{
 				case "hugs antobot":
-					postMessage("\x0001ACTION hugs {0}\x0001", user);
+					PostMessage("\x0001ACTION hugs {0}\x0001", user);
 					break;
 				case "kisses antobot":
-					postMessage("\x0001ACTION kisses {0}\x0001", user);
+					PostMessage("\x0001ACTION kisses {0}\x0001", user);
 					break;
 			}
 		}
 
-		protected override void onMsgGet(string msg)
+		protected override void OnMsgGet(string msg)
 		{
-			base.onMsgGet(msg);
+			base.OnMsgGet(msg);
 
 			int idxExcl = msg.IndexOf('!');
 			string user = null;
@@ -279,13 +279,13 @@ namespace antobot
 			}
 		}
 
-		public override void postMessage(string msg, params object[] format)
+		public override void PostMessage(string msg, params object[] format)
 		{
 			string str = string.Format(msg, format);
 			if (str != lastMsgSaid)
 			{
-				base.postMessage(str);
-				log(str, botname);
+				base.PostMessage(str);
+				log(str, BotName);
 
 				lastMsgSaid = str;
 			}
@@ -343,7 +343,7 @@ namespace antobot
 			while (true)
 			{
 				string str = Console.ReadLine();
-				irc.postMessageDirect(str);
+				irc.PostMessageDirect(str);
 				if (str == "QUIT")
 				{
 					break;

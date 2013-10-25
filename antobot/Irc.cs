@@ -14,28 +14,30 @@ namespace antobot
 	{
 		private TcpClient client;
 		private NetworkStream stream;
-		public readonly string network;
-		public readonly string channel;
-		public readonly string botname;
+		
+		public readonly string Network;
+		public readonly string Channel;
+		public readonly string BotName;
+
 		private readonly object clientLock = new object();
 
 		public Irc(string server, string botname, string channel)
 		{
-			this.network = server;
-			this.channel = channel;
-			this.botname = botname;
+			this.Network = server;
+			this.Channel = channel;
+			this.BotName = botname;
 
 			client = new TcpClient(server, 6667);
 			stream = client.GetStream();
 
-			postMessageDirect("NICK {0}", botname);
-			postMessageDirect("USER {0} 0 * :{0} Bot", botname);
+			PostMessageDirect("NICK {0}", botname);
+			PostMessageDirect("USER {0} 0 * :{0} Bot", botname);
 
 			Thread t = new Thread(msgLoop);
 			t.Start();
 
 			Thread.Sleep(11000);
-			postMessageDirect("JOIN {0}", channel);
+			PostMessageDirect("JOIN {0}", channel);
 		}
 
 		private static byte[] getBytes(string str)
@@ -61,23 +63,23 @@ namespace antobot
 
 					foreach (string split in str.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
 					{
-						onMsgGet(split);
+						OnMsgGet(split);
 					}
 				}
 			}
 		}
 
-		protected virtual void onMsgGet(string msg)
+		protected virtual void OnMsgGet(string msg)
 		{
 			Console.WriteLine(msg);
 
 			if (msg.StartsWith("PING"))
 			{
-				postMessageDirect("PONG " + msg.Substring("PING :".Length));
+				PostMessageDirect("PONG " + msg.Substring("PING :".Length));
 			}
 		}
 
-		public void postMessageDirect(string str, params object[] format)
+		public void PostMessageDirect(string str, params object[] format)
 		{
 			//lock (clientLock)
 			{
@@ -90,10 +92,10 @@ namespace antobot
 			}
 		}
 
-		public virtual void postMessage(string msg, params object[] format)
+		public virtual void PostMessage(string msg, params object[] format)
 		{
 			msg = "PRIVMSG #GamedevTeam :" + string.Format(msg, format);
-			postMessageDirect(msg);
+			PostMessageDirect(msg);
 		}
 	}
 }
